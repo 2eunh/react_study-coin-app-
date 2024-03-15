@@ -1,7 +1,9 @@
 
-import { createGlobalStyle } from "styled-components";
+import { ThemeProvider, createGlobalStyle } from "styled-components";
 import Router from "./Router";
 import { ReactQueryDevtools } from "react-query/devtools";
+import { useState } from "react";
+import { darkTheme, lightTheme } from "./theme";
 
 
 ///style reset (reset css를 작성하거나 styled-reset 라이브러리를 설치해도 됨)
@@ -70,12 +72,17 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 function App() {
+  const [isDark, setIsDark] = useState(false);
+  const toggleDark = () => setIsDark((current) => !current);
   return (
     //<> --> Fragment, 일종의 유령컴포넌트, 부모 없이 서로 붙어 있는 것들을 리턴할 수 있게 해줌
     <> 
-      <GlobalStyle />
-      <Router />
-      <ReactQueryDevtools initialIsOpen = {true}/>
+      <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+        <button onClick={toggleDark}>Toggle Mode</button>
+        <GlobalStyle />
+        <Router />
+        <ReactQueryDevtools initialIsOpen={true} />
+      </ThemeProvider>
       {/* react query에 있는 devtools를 import해오면 캐시에있는 query를 볼 수 있음 */}
     </>
   );
